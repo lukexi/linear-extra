@@ -33,3 +33,8 @@ addPoses basePose addedPose =
     (addPosition    + basePosition) 
     (addOrientation * baseOrientation) 
     -- quat rotation order must be rotation*original
+
+
+interpolatePoses :: (Num a, Fractional a, RealFloat a) => Pose a -> Pose a -> Pose a
+interpolatePoses (Pose p1 o1) (Pose p2 o2) =
+  Pose (lerp 0.5 p1 p2) (slerp o1 o2 0.5)
