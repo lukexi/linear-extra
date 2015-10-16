@@ -15,7 +15,7 @@ makeLenses ''Pose
 
 newPose :: (Floating a, Epsilon a, Num a) => Pose a
 newPose = Pose 
-  { _posPosition = 0
+  { _posPosition = V3 0 0 0
   , _posOrientation = axisAngle (V3 0 1 0) 0
   }
 

@@ -38,4 +38,6 @@ quaternionFromMatrix matrix = Quaternion w (V3 x y z)
 copySignOf b a = if signum a == signum b then a else negate a
 
 
-poseFromMatrix matrix = Pose (matrix ^. translation) (quaternionFromMatrix matrix)
+poseFromMatrix matrix = Pose 
+  (matrix ^. translation) 
+  (quaternionFromMatrix matrix)
