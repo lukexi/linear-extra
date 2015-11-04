@@ -38,3 +38,15 @@ addPoses basePose addedPose =
 interpolatePoses :: (Num a, Fractional a, RealFloat a) => Pose a -> Pose a -> Pose a
 interpolatePoses (Pose p1 o1) (Pose p2 o2) =
   Pose (lerp 0.5 p1 p2) (slerp o1 o2 0.5)
+
+
+
+-- | Get a view matrix for a camera at a given position and orientation
+viewMatrix :: (RealFloat a, Conjugate a) => V3 a -> Quaternion a -> M44 a
+viewMatrix position orientation = mkTransformation q (rotate q . negate $ position)
+    where q = conjugate orientation
+
+viewMatrixFromPose :: (RealFloat a, Conjugate a) => Pose a -> M44 a
+viewMatrixFromPose (Pose posit orient) = viewMatrix posit orient
+
+
