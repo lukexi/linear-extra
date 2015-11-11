@@ -1,4 +1,4 @@
-{-# LANGUAGE TemplateHaskell, DeriveGeneric, DeriveAnyClass #-}
+{-# LANGUAGE TemplateHaskell, DeriveGeneric, DeriveAnyClass, FlexibleContexts #-}
 
 module Linear.Extra.Pose where
 
@@ -24,6 +24,9 @@ transformationFromPose pose = mkTransformation (pose ^. posOrientation) (pose ^.
 
 shiftBy :: (Num a, RealFloat a, Conjugate a) => V3 a -> Pose a -> Pose a
 shiftBy vec pose = pose & posPosition +~ rotate (pose ^. posOrientation) vec
+
+rotateBy :: (RealFloat a) => Quaternion a -> Pose a -> Pose a
+rotateBy quat pose = pose & posOrientation %~ (quat *)
 
 addPoses :: (Num a, RealFloat a) => Pose a -> Pose a -> Pose a
 addPoses basePose addedPose = 
