@@ -9,6 +9,8 @@ scaleMatrix (V3 x y z) = V4 (V4 x 0 0 0)
                             (V4 0 0 z 0)
                             (V4 0 0 0 1)
 
+translateMatrix :: (Num a) => V3 a -> M44 a
+translateMatrix v = identity & translation .~ v
 
 m44FromList :: [a] -> M44 a
 m44FromList [a,b,c,d
