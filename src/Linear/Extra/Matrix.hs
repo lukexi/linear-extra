@@ -43,3 +43,9 @@ copySignOf b a = if signum a == signum b then a else negate a
 poseFromMatrix matrix = Pose 
   (matrix ^. translation) 
   (quaternionFromMatrix matrix)
+
+
+worldPointToModelPoint model worldPoint = pointOnModel
+  where
+    invModel     = safeInv44 model
+    pointOnModel = normalizePoint (invModel !* point worldPoint)
