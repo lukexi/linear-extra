@@ -22,9 +22,6 @@ m44FromList [a,b,c,d
                            (V4 m n o p)
 m44FromList _ = error "Invalid list length for m44FromList"
 
-safeInv44 :: (Fractional a, Epsilon a) => M44 a -> M44 a
-safeInv44 matrix = fromMaybe matrix (inv44 matrix)
-
 -- quaternionFromMatrix :: M44 a -> Quaternion a
 quaternionFromMatrix matrix = Quaternion w (V3 x y z)
   where
@@ -47,5 +44,5 @@ poseFromMatrix matrix = Pose
 
 worldPointToModelPoint model worldPoint = pointOnModel
   where
-    invModel     = safeInv44 model
+    invModel     = inv44 model
     pointOnModel = normalizePoint (invModel !* point worldPoint)

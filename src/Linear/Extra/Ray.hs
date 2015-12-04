@@ -14,15 +14,16 @@ poseToRay pose = Ray fromPos toPos
   where fromPos = pose ^. posPosition
         toPos   = rotate (pose ^. posOrientation) (fromPos & _z -~ 1000)
 
+directionFromRay Ray{..} = normalize (rayTo - rayFrom)
 
 -- | Ray to Oriented Bounding Box intersection.
 -- AABB argument should be untransformed.
 -- Returns distance from the ray origin if a collision is found.
 -- adapted from http://www.opengl-tutorial.org/miscellaneous/clicking-on-objects/picking-with-custom-ray-obb-function/
 rayOBBIntersection :: (RealFloat a, Epsilon a) => Ray a -> (V3 a, V3 a) -> M44 a -> Maybe a
-rayOBBIntersection Ray{..} (aabbMin, aabbMax) model44 = result
+rayOBBIntersection ray@Ray{..} (aabbMin, aabbMax) model44 = result
     where
-        rayDirection = normalize (rayTo - rayFrom)
+        rayDirection = directionFromRay ray
         (tMin0, tMax0) = (0, 1000000)
         boxPositionWorld = model44 ^. translation
         delta            = boxPositionWorld - rayFrom
