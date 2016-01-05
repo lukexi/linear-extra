@@ -4,17 +4,18 @@ import Linear.Extra.Pose
 import Linear
 import Control.Lens
 
-data Ray a = Ray { rayFrom :: !(V3 a)
-                 , rayTo   :: !(V3 a)
+data Ray a = Ray { rayOrigin    :: !(V3 a)
+                 , rayDirection :: !(V3 a)
                  } deriving (Show, Eq)
 
 -- | Returns a ray from the given Pose's position along the Pose's orientation
-poseToRay :: (RealFloat a, Conjugate a) => Pose a -> Ray a
-poseToRay pose = Ray fromPos toPos
-  where fromPos = pose ^. posPosition
-        toPos   = rotate (pose ^. posOrientation) (fromPos & _z -~ 1000)
+poseToRay :: (RealFloat a, Conjugate a) => Pose a -> V3 a -> Ray a
+poseToRay pose basis = Ray origin direction
+  where origin    = pose ^. posPosition
+        direction = rotate (pose ^. posOrientation) basis
 
-directionFromRay Ray{..} = normalize (rayTo - rayFrom)
+pointOnRay :: (RealFloat a) => Ray a -> a -> V3 a
+pointOnRay Ray{..} magnitude = (rayOrigin + rayDirection * realToFrac magnitude)
 
 -- | Ray to Oriented Bounding Box intersection.
 -- AABB argument should be untransformed.
@@ -23,10 +24,9 @@ directionFromRay Ray{..} = normalize (rayTo - rayFrom)
 rayOBBIntersection :: (RealFloat a, Epsilon a) => Ray a -> (V3 a, V3 a) -> M44 a -> Maybe a
 rayOBBIntersection ray@Ray{..} (aabbMin, aabbMax) model44 = result
     where
-        rayDirection = directionFromRay ray
         (tMin0, tMax0) = (0, 1000000)
         boxPositionWorld = model44 ^. translation
-        delta            = boxPositionWorld - rayFrom
+        delta            = boxPositionWorld - rayOrigin
         xAxis            = model44 ^. column _x . _xyz
         yAxis            = model44 ^. column _y . _xyz
         zAxis            = model44 ^. column _z . _xyz
