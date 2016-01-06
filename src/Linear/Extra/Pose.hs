@@ -37,6 +37,13 @@ addPoses basePose addedPose =
     (addOrientation * baseOrientation) 
     -- quat rotation order must be rotation*original
 
+subtractPoses :: (Conjugate a, Num a, RealFloat a) => Pose a -> Pose a -> Pose a
+subtractPoses basePose subtractedPose = 
+  let Pose basePosition baseOrientation = basePose
+      Pose subPosition  subOrientation  = subtractedPose
+  in  Pose
+      (basePosition    - subPosition)
+      (baseOrientation * conjugate subOrientation)
 
 interpolatePoses :: (Num a, Fractional a, RealFloat a) => Pose a -> Pose a -> Pose a
 interpolatePoses (Pose p1 o1) (Pose p2 o2) =
