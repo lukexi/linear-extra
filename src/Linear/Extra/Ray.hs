@@ -14,8 +14,8 @@ poseToRay pose basis = Ray origin direction
   where origin    = pose ^. posPosition
         direction = rotate (pose ^. posOrientation) basis
 
-pointOnRay :: (RealFloat a) => Ray a -> a -> V3 a
-pointOnRay Ray{..} magnitude = (rayOrigin + rayDirection * realToFrac magnitude)
+projectRay :: (RealFloat a) => Ray a -> a -> V3 a
+projectRay Ray{..} magnitude = (rayOrigin + rayDirection * realToFrac magnitude)
 
 -- | Ray to Oriented Bounding Box intersection.
 -- AABB argument should be untransformed.
