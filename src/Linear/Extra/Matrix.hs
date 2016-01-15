@@ -46,3 +46,12 @@ worldPointToModelPoint model worldPoint = pointOnModel
   where
     invModel     = inv44 model
     pointOnModel = normalizePoint (invModel !* point worldPoint)
+
+-- Subtract b from a
+subtractPose :: (Floating a, Ord a, Epsilon a) => Pose a -> Pose a -> Pose a
+subtractPose a b = poseFromMatrix $
+    inv44 (transformationFromPose b) !*! transformationFromPose a
+
+addPose :: (Floating a, Ord a, Epsilon a) => Pose a -> Pose a -> Pose a
+addPose a b = poseFromMatrix $
+    transformationFromPose a !*! transformationFromPose b

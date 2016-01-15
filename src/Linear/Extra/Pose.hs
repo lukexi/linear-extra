@@ -28,22 +28,7 @@ shiftBy vec pose = pose & posPosition +~ rotate (pose ^. posOrientation) vec
 rotateBy :: (RealFloat a) => Quaternion a -> Pose a -> Pose a
 rotateBy quat pose = pose & posOrientation %~ (quat *)
 
-addPoses :: (Num a, RealFloat a) => Pose a -> Pose a -> Pose a
-addPoses basePose addedPose = 
-  let Pose basePosition baseOrientation = basePose
-      Pose addPosition  addOrientation  = addedPose
-  in  Pose 
-    (addPosition    + basePosition) 
-    (addOrientation * baseOrientation) 
-    -- quat rotation order must be rotation*original
 
-subtractPoses :: (Conjugate a, Num a, RealFloat a) => Pose a -> Pose a -> Pose a
-subtractPoses basePose subtractedPose = 
-  let Pose basePosition baseOrientation = basePose
-      Pose subPosition  subOrientation  = subtractedPose
-  in  Pose
-      (basePosition    - subPosition)
-      (baseOrientation * conjugate subOrientation)
 
 interpolatePoses :: (Num a, Fractional a, RealFloat a) => Pose a -> Pose a -> Pose a
 interpolatePoses (Pose p1 o1) (Pose p2 o2) =
