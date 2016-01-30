@@ -9,11 +9,12 @@ data Ray a = Ray { rayOrigin    :: !(V3 a)
                  } deriving (Show, Eq)
 
 -- | Returns a ray from the given Pose's position along the Pose's orientation
-poseToRay :: (RealFloat a, Conjugate a) => Pose a -> V3 a -> Ray a
+poseToRay :: (Epsilon a, RealFloat a, Conjugate a) => Pose a -> V3 a -> Ray a
 poseToRay pose basis = Ray origin direction
   where origin    = pose ^. posPosition
-        direction = rotate (pose ^. posOrientation) basis
+        direction = normalize $ rotate (pose ^. posOrientation) basis
 
+-- | Returns a point along the ray at the given magnitude
 projectRay :: (RealFloat a) => Ray a -> a -> V3 a
 projectRay Ray{..} magnitude = (rayOrigin + rayDirection * realToFrac magnitude)
 
