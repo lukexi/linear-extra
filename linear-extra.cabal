@@ -16,17 +16,19 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
   exposed-modules:     Linear.Extra
-                       Linear.Extra.Matrix
-                       Linear.Extra.Pose
-                       Linear.Extra.Ray
-                       Linear.Extra.Lenses
                        Linear.Extra.CompressedQuaternion
+                       Linear.Extra.Lenses
+                       Linear.Extra.Matrix
+                       Linear.Extra.Orphans
+                       Linear.Extra.Pose
                        Linear.Extra.Random
+                       Linear.Extra.Ray
   build-depends:       base >= 4.7 && < 5
                      , binary
                      , lens
                      , linear
                      , MonadRandom
+                     , aeson
   default-language:    Haskell2010
 
 test-suite linear-extra-test

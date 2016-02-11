@@ -10,4 +10,5 @@ import Linear.Extra.Matrix                as Exports
 import Linear.Extra.CompressedQuaternion  as Exports
 import Linear.Extra.Lenses                as Exports
 import Linear.Extra.Random                as Exports
+import Linear.Extra.Orphans               as Exports
 
