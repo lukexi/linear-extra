@@ -37,8 +37,8 @@ quaternionFromMatrix matrix = Quaternion w (V3 x y z)
 copySignOf b a = if signum a == signum b then a else negate a
 
 
-poseFromMatrix matrix = Pose 
-  (matrix ^. translation) 
+poseFromMatrix matrix = Pose
+  (matrix ^. translation)
   (quaternionFromMatrix matrix)
 
 
@@ -50,8 +50,35 @@ worldPointToModelPoint model worldPoint = pointOnModel
 -- Subtract b from a
 subtractPose :: (Floating a, Ord a, Epsilon a) => Pose a -> Pose a -> Pose a
 subtractPose a b = poseFromMatrix $
-    inv44 (transformationFromPose b) !*! transformationFromPose a
+    transformationFromPose a `subtractMatrix` transformationFromPose b
 
 addPose :: (Floating a, Ord a, Epsilon a) => Pose a -> Pose a -> Pose a
 addPose a b = poseFromMatrix $
-    transformationFromPose a !*! transformationFromPose b
+    transformationFromPose a `addMatrix` transformationFromPose b
+
+
+addMatrix :: (Floating a, Ord a, Epsilon a) => M44 a -> M44 a -> M44 a
+addMatrix a b = a !*! b
+
+subtractMatrix :: (Floating a, Ord a, Epsilon a) => M44 a -> M44 a -> M44 a
+subtractMatrix a b = inv44 b !*! a
+
+
+quatToAxisAngle :: (RealFloat a) => Quaternion a -> (V3 a, a)
+quatToAxisAngle (Quaternion qw (V3 qx qy qz)) = (V3 x y z, angle)
+    where
+        angle = 2 * acos qw
+        x = qx / s'
+        y = qy / s'
+        z = qz / s'
+        s = sqrt (1-qw*qw)
+        s' | s < 0.001 = 1
+           | otherwise = s
+
+quatToEuler ::  (RealFloat a) => Quaternion a -> V3 a
+quatToEuler (Quaternion qw (V3 qx qy qz)) = V3 pitch yaw roll
+    where
+        qz2   = qz^2
+        yaw   = atan2 (2 * qy * qw - 2 * qx * qz) (1 - 2 * qy^2 - 2 * qz2)
+        pitch = asin  (2 * qx * qy + 2 * qz * qw)
+        roll  = atan2 (2 * qx * qw - 2 * qy * qz) (1 - 2 * qx^2 - 2 * qz2)
