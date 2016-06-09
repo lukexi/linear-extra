@@ -82,3 +82,20 @@ quatToEuler (Quaternion qw (V3 qx qy qz)) = V3 pitch yaw roll
         yaw   = atan2 (2 * qy * qw - 2 * qx * qz) (1 - 2 * qy^2 - 2 * qz2)
         pitch = asin  (2 * qx * qy + 2 * qz * qw)
         roll  = atan2 (2 * qx * qw - 2 * qy * qz) (1 - 2 * qx^2 - 2 * qz2)
+
+
+eulerToQuat :: RealFloat a => V3 a -> Quaternion a
+eulerToQuat (V3 pitch yaw roll) = Quaternion qw (V3 qx qy qz)
+  where
+    c1   = cos (yaw   / 2)
+    s1   = sin (yaw   / 2)
+    c2   = cos (pitch / 2)
+    s2   = sin (pitch / 2)
+    c3   = cos (roll  / 2)
+    s3   = sin (roll  / 2)
+    c1c2 = c1 * c2
+    s1s2 = s1 * s2
+    qw   = c1c2 * c3 - s1s2 * s3
+    qx   = c1c2 * s3 + s1s2 * c3
+    qy   = s1 * c2 * c3 + c1 * s2 * s3
+    qz   = c1 * s2 * c3 - s1 * c2 * s3
