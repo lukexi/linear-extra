@@ -23,6 +23,7 @@ library
                        Linear.Extra.Pose
                        Linear.Extra.Random
                        Linear.Extra.Ray
+                       Linear.Extra.Window
   build-depends:       base >= 4.7 && < 5
                      , binary
                      , lens

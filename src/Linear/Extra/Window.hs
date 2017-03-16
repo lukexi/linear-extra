@@ -1,6 +1,7 @@
 {-# LANGUAGE ViewPatterns #-}
 module Linear.Extra.Window where
-
+import Linear
+import Control.Lens
 windowPosToWorldPos :: (Epsilon a, Real a, Floating a)
                     => V2 a
                     -> M44 a
