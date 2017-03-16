@@ -12,3 +12,4 @@ import Linear.Extra.Lenses                as Exports
 import Linear.Extra.Random                as Exports
 import Linear.Extra.Orphans               as Exports
 
+import Linear.Extra.Window                as Exports
